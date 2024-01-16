@@ -49,7 +49,7 @@ Create the databases mentioned above using your favorite method - for example [p
 You can give the databases any name you want but make sure `config.xml` file has the correct names. For further information see [schema creation](/prowlarr/postgres-setup#schema-creation).
 
 ### Schema creation
-
+#### Static file
  We need to tell Prowlarr to use Postgres. The `config.xml` should already be populated with the entries we need:
 
 ```xml
@@ -64,6 +64,22 @@ If you want to specify a database name then should also include the following co
 ```xml
 <PostgresMainDb>MainDbName</PostgresMainDb>
 <PostgresLogDb>LogDbName</PostgresLogDb>
+```
+#### Container environment variables
+Alternatively database schema can be defined using environment variables specified during container creation.
+In `compose.yaml` write as follows:
+
+```
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:develop
+    environment:
+      Prowlarr__Postgres__User: qstick
+      Prowlarr__Postgres__Password: ${POSTGRES_DB_PASSWORD} #you can keep password in .env file or specify it here
+      Prowlarr__Postgres__Port: 5432
+      Prowlarr__Postgres__Host: postgres14
+      Prowlarr__Postgres__MainDb: prowlarr-main
+      Prowlarr__Postgres__LogDb: prowlarr-log
+...
 ```
 
 Only **after creating** both databases you can start the Prowlarr migration from SQLite to Postgres.
